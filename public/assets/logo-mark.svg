@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="DesignBeen logo mark">
+  <defs>
+    <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4000c1" />
+      <stop offset="55%" stop-color="#5800ff" />
+      <stop offset="100%" stop-color="#00ccf9" />
+    </linearGradient>
+  </defs>
+  <path d="M33 31h32c14 0 25 11 25 25 0 10-5 18-13 22 10 4 17 13 17 25 0 16-12 26-29 26H33V31zm28 39c8 0 13-4 13-11 0-7-5-11-13-11H49v22h12zm3 39c10 0 16-4 16-12 0-8-6-13-16-13H49v25h15z" fill="url(#g)"/>
+</svg>

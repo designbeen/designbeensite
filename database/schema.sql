@@ -1,0 +1,278 @@
+CREATE TABLE IF NOT EXISTS users (
+  id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  name VARCHAR(120) NOT NULL,
+  email VARCHAR(190) NOT NULL,
+  password_hash VARCHAR(255) NOT NULL,
+  role ENUM('admin', 'editor') NOT NULL DEFAULT 'admin',
+  active TINYINT(1) NOT NULL DEFAULT 1,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  UNIQUE KEY uniq_users_email (email)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS site_settings (
+  id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  site_key VARCHAR(64) NOT NULL DEFAULT 'default',
+  site_name VARCHAR(190) NOT NULL,
+  site_tagline VARCHAR(190) DEFAULT NULL,
+  logo_url VARCHAR(255) DEFAULT NULL,
+  favicon_url VARCHAR(255) DEFAULT NULL,
+  email VARCHAR(190) DEFAULT NULL,
+  phone VARCHAR(60) DEFAULT NULL,
+  address VARCHAR(255) DEFAULT NULL,
+  instagram_url VARCHAR(255) DEFAULT NULL,
+  linkedin_url VARCHAR(255) DEFAULT NULL,
+  behance_url VARCHAR(255) DEFAULT NULL,
+  footer_description TEXT DEFAULT NULL,
+  copyright_text VARCHAR(255) DEFAULT NULL,
+  primary_cta_label VARCHAR(80) DEFAULT NULL,
+  secondary_cta_label VARCHAR(80) DEFAULT NULL,
+  theme_preset VARCHAR(50) NOT NULL DEFAULT 'designbeen',
+  primary_color VARCHAR(20) DEFAULT NULL,
+  primary_hover_color VARCHAR(20) DEFAULT NULL,
+  secondary_color VARCHAR(20) DEFAULT NULL,
+  accent_color VARCHAR(20) DEFAULT NULL,
+  background_color VARCHAR(20) DEFAULT NULL,
+  surface_color VARCHAR(40) DEFAULT NULL,
+  text_color VARCHAR(20) DEFAULT NULL,
+  active TINYINT(1) NOT NULL DEFAULT 1,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  UNIQUE KEY uniq_site_settings_key (site_key)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS navigation_items (
+  id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  label VARCHAR(120) NOT NULL,
+  url VARCHAR(255) NOT NULL,
+  order_index INT NOT NULL DEFAULT 0,
+  visible TINYINT(1) NOT NULL DEFAULT 1,
+  is_external TINYINT(1) NOT NULL DEFAULT 0,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  KEY idx_navigation_order (order_index, visible)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS hero_sections (
+  id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  page_key VARCHAR(50) NOT NULL,
+  badge VARCHAR(120) DEFAULT NULL,
+  title VARCHAR(255) NOT NULL,
+  highlighted_text VARCHAR(120) DEFAULT NULL,
+  description TEXT DEFAULT NULL,
+  primary_cta_label VARCHAR(80) DEFAULT NULL,
+  primary_cta_url VARCHAR(255) DEFAULT NULL,
+  secondary_cta_label VARCHAR(80) DEFAULT NULL,
+  secondary_cta_url VARCHAR(255) DEFAULT NULL,
+  image_url VARCHAR(255) DEFAULT NULL,
+  image_alt VARCHAR(190) DEFAULT NULL,
+  background_text TEXT DEFAULT NULL,
+  active TINYINT(1) NOT NULL DEFAULT 1,
+  sort_order INT NOT NULL DEFAULT 0,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  KEY idx_hero_page (page_key, active, sort_order)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS service_categories (
+  id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  name VARCHAR(120) NOT NULL,
+  slug VARCHAR(140) NOT NULL,
+  description TEXT DEFAULT NULL,
+  sort_order INT NOT NULL DEFAULT 0,
+  active TINYINT(1) NOT NULL DEFAULT 1,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  UNIQUE KEY uniq_service_categories_slug (slug)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS services (
+  id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  category_id INT UNSIGNED DEFAULT NULL,
+  title VARCHAR(190) NOT NULL,
+  slug VARCHAR(190) NOT NULL,
+  short_description VARCHAR(255) DEFAULT NULL,
+  full_description TEXT DEFAULT NULL,
+  icon VARCHAR(120) DEFAULT NULL,
+  image_url VARCHAR(255) DEFAULT NULL,
+  image_alt VARCHAR(190) DEFAULT NULL,
+  sort_order INT NOT NULL DEFAULT 0,
+  featured TINYINT(1) NOT NULL DEFAULT 0,
+  active TINYINT(1) NOT NULL DEFAULT 1,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  UNIQUE KEY uniq_services_slug (slug),
+  KEY idx_services_category (category_id, active, featured, sort_order),
+  CONSTRAINT fk_services_category FOREIGN KEY (category_id) REFERENCES service_categories (id) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS project_categories (
+  id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  name VARCHAR(120) NOT NULL,
+  slug VARCHAR(140) NOT NULL,
+  description TEXT DEFAULT NULL,
+  sort_order INT NOT NULL DEFAULT 0,
+  active TINYINT(1) NOT NULL DEFAULT 1,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  UNIQUE KEY uniq_project_categories_slug (slug)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS projects (
+  id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  category_id INT UNSIGNED DEFAULT NULL,
+  title VARCHAR(190) NOT NULL,
+  slug VARCHAR(190) NOT NULL,
+  short_description VARCHAR(255) DEFAULT NULL,
+  full_description TEXT DEFAULT NULL,
+  client VARCHAR(190) DEFAULT NULL,
+  cover_image_url VARCHAR(255) DEFAULT NULL,
+  cover_image_alt VARCHAR(190) DEFAULT NULL,
+  project_url VARCHAR(255) DEFAULT NULL,
+  github_url VARCHAR(255) DEFAULT NULL,
+  featured TINYINT(1) NOT NULL DEFAULT 0,
+  published TINYINT(1) NOT NULL DEFAULT 1,
+  publication_date DATE DEFAULT NULL,
+  sort_order INT NOT NULL DEFAULT 0,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  UNIQUE KEY uniq_projects_slug (slug),
+  KEY idx_projects_category (category_id, published, featured, sort_order),
+  CONSTRAINT fk_projects_category FOREIGN KEY (category_id) REFERENCES project_categories (id) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS project_images (
+  id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  project_id INT UNSIGNED NOT NULL,
+  image_url VARCHAR(255) NOT NULL,
+  alt_text VARCHAR(190) DEFAULT NULL,
+  sort_order INT NOT NULL DEFAULT 0,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  KEY idx_project_images_project (project_id, sort_order),
+  CONSTRAINT fk_project_images_project FOREIGN KEY (project_id) REFERENCES projects (id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS technologies (
+  id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  name VARCHAR(120) NOT NULL,
+  slug VARCHAR(140) NOT NULL,
+  icon VARCHAR(255) DEFAULT NULL,
+  website_url VARCHAR(255) DEFAULT NULL,
+  sort_order INT NOT NULL DEFAULT 0,
+  active TINYINT(1) NOT NULL DEFAULT 1,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  UNIQUE KEY uniq_technologies_slug (slug),
+  KEY idx_technologies_active (active, sort_order)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS project_technologies (
+  project_id INT UNSIGNED NOT NULL,
+  technology_id INT UNSIGNED NOT NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (project_id, technology_id),
+  KEY idx_project_technologies_technology (technology_id),
+  CONSTRAINT fk_project_technologies_project FOREIGN KEY (project_id) REFERENCES projects (id) ON DELETE CASCADE,
+  CONSTRAINT fk_project_technologies_technology FOREIGN KEY (technology_id) REFERENCES technologies (id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS testimonials (
+  id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  client_name VARCHAR(190) NOT NULL,
+  role VARCHAR(190) DEFAULT NULL,
+  company VARCHAR(190) DEFAULT NULL,
+  testimonial TEXT NOT NULL,
+  avatar_url VARCHAR(255) DEFAULT NULL,
+  sort_order INT NOT NULL DEFAULT 0,
+  active TINYINT(1) NOT NULL DEFAULT 1,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  KEY idx_testimonials_active (active, sort_order)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS methodology_steps (
+  id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  page_key VARCHAR(50) NOT NULL DEFAULT 'home',
+  step_number INT NOT NULL,
+  title VARCHAR(120) NOT NULL,
+  description TEXT DEFAULT NULL,
+  active TINYINT(1) NOT NULL DEFAULT 1,
+  sort_order INT NOT NULL DEFAULT 0,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  KEY idx_methodology_page (page_key, active, sort_order, step_number)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS contact_messages (
+  id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  name VARCHAR(190) NOT NULL,
+  email VARCHAR(190) NOT NULL,
+  subject VARCHAR(190) DEFAULT NULL,
+  message TEXT NOT NULL,
+  status ENUM('new', 'read', 'replied', 'archived') NOT NULL DEFAULT 'new',
+  ip_address VARCHAR(64) DEFAULT NULL,
+  user_agent VARCHAR(255) DEFAULT NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  KEY idx_contact_messages_status (status, created_at)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS partners (
+  id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  name VARCHAR(190) NOT NULL,
+  logo_url VARCHAR(255) DEFAULT NULL,
+  partner_type VARCHAR(100) DEFAULT 'ENTERPRISE PARTNER',
+  website_url VARCHAR(255) DEFAULT NULL,
+  sort_order INT NOT NULL DEFAULT 0,
+  active TINYINT(1) NOT NULL DEFAULT 1,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  KEY idx_partners_active (active, sort_order)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS team_members (
+  id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  name VARCHAR(190) NOT NULL,
+  role VARCHAR(190) NOT NULL,
+  department VARCHAR(100) DEFAULT 'Engineering',
+  bio TEXT DEFAULT NULL,
+  avatar_url VARCHAR(255) DEFAULT NULL,
+  linkedin_url VARCHAR(255) DEFAULT NULL,
+  github_url VARCHAR(255) DEFAULT NULL,
+  twitter_url VARCHAR(255) DEFAULT NULL,
+  skills VARCHAR(255) DEFAULT NULL,
+  sort_order INT NOT NULL DEFAULT 0,
+  active TINYINT(1) NOT NULL DEFAULT 1,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  KEY idx_team_members_active (active, department, sort_order)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS team_departments (
+  id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  name VARCHAR(120) NOT NULL,
+  slug VARCHAR(140) NOT NULL,
+  description TEXT DEFAULT NULL,
+  sort_order INT NOT NULL DEFAULT 0,
+  active TINYINT(1) NOT NULL DEFAULT 1,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  UNIQUE KEY uniq_team_departments_slug (slug),
+  KEY idx_team_departments_active (active, sort_order)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

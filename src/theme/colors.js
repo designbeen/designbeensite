@@ -1,0 +1,25 @@
+const colors = {
+  primary: '#4000c1',
+  primaryHover: '#5200ec',
+  secondary: '#00677f',
+  accent: '#00ccf9',
+  accentSecondary: '#4d00b5',
+  background: '#f7f9fb',
+  backgroundSecondary: '#eef2f7',
+  surface: 'rgba(255, 255, 255, 0.55)',
+  surfaceElevated: 'rgba(255, 255, 255, 0.75)',
+  text: '#191c1e',
+  textSecondary: '#4b5563',
+  textMuted: '#6b7280',
+  border: 'rgba(255, 255, 255, 0.4)',
+  borderLight: 'rgba(255, 255, 255, 0.65)',
+  success: '#0f9d58',
+  warning: '#d97706',
+  danger: '#dc2626',
+  gradientStart: '#4000c1',
+  gradientMiddle: '#5800ff',
+  gradientEnd: '#00ccf9',
+  onPrimary: '#ffffff',
+};
+
+export default colors;
