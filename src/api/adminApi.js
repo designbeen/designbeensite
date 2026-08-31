@@ -20,20 +20,22 @@ async function processFormData(formData) {
         payload.image_url = fileUrl;
       } else if (key === 'avatar' || key === 'avatarFile') {
         payload.avatar_url = fileUrl;
-      } else if (key === 'logoFile') {
+      } else if (key === 'logoFile' || key === 'logo') {
         payload.logo_url = fileUrl;
+      } else if (key === 'faviconFile' || key === 'favicon') {
+        payload.favicon_url = fileUrl;
       } else if (key === 'iconFile') {
         payload.icon = fileUrl;
-      } else if (key === 'logo') {
-        payload.logo_url = fileUrl;
-      } else if (key === 'favicon') {
-        payload.favicon_url = fileUrl;
       } else {
         payload[key] = fileUrl;
       }
     } else if (typeof value === 'string') {
-      if (key === 'galleryImages') {
-        galleryImages.push(value);
+      if (['image', 'coverImage', 'avatar', 'avatarFile', 'logo', 'logoFile', 'favicon', 'faviconFile'].includes(key)) {
+        if (value.trim() && value !== 'null' && value !== 'undefined') {
+          payload[key] = value;
+        }
+      } else if (key === 'galleryImages') {
+        if (value.trim()) galleryImages.push(value);
       } else {
         payload[key] = value;
       }
