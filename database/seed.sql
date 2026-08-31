@@ -21,7 +21,9 @@ TRUNCATE TABLE users;
 SET FOREIGN_KEY_CHECKS = 1;
 
 INSERT INTO users (name, email, password_hash, role, active)
-VALUES ('DesignBeen Admin', 'admin@designbeen.local', '$2b$10$6nuZGIJkulOPm58dGZi72O1cT.JWonis7dRcdYBZZcKsgeaQQ3D5e', 'admin', 1);
+VALUES
+  ('DesignBeen Admin', 'admin@designbeen.com', '$2a$10$ut6VPNsVU5.Oc14J6Hhv5.AIXLHLJ9IK6u7TfJIGYJcVQ5p.1tJ0O', 'admin', 1),
+  ('DesignBeen Admin', 'admin@designbeen.local', '$2a$10$ut6VPNsVU5.Oc14J6Hhv5.AIXLHLJ9IK6u7TfJIGYJcVQ5p.1tJ0O', 'admin', 1);
 
 INSERT INTO site_settings (
   site_key, site_name, site_tagline, logo_url, favicon_url, email, phone, address,
