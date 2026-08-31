@@ -1,19 +1,28 @@
-import React from 'react';
-import { Navigate } from 'react-router-dom';
+'use client';
+
+import React, { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import Loading from '../common/Loading.jsx';
 import ErrorState from '../common/ErrorState.jsx';
 import { getAdminSession } from '../../api/adminApi.js';
 
 export default function ProtectedRoute({ children }) {
+  const router = useRouter();
   const sessionQuery = useQuery({ queryKey: ['admin-session'], queryFn: getAdminSession, retry: false });
+
+  useEffect(() => {
+    if (sessionQuery.isError) {
+      router.replace('/admin/login');
+    }
+  }, [sessionQuery.isError, router]);
 
   if (sessionQuery.isLoading) {
     return <Loading label="Checking admin session" />;
   }
 
   if (sessionQuery.isError) {
-    return <Navigate to="/admin/login" replace />;
+    return <Loading label="Redirecting to login..." />;
   }
 
   if (!sessionQuery.data) {

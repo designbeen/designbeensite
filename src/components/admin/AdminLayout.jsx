@@ -1,5 +1,7 @@
+'use client';
+
 import React from 'react';
-import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom';
+import { Link, NavLink, useNavigate } from '@/lib/router-compat';
 import { logoutAdmin } from '../../api/adminApi.js';
 import Button from '../common/Button.jsx';
 import BrandLogo from '../common/BrandLogo.jsx';
@@ -19,7 +21,7 @@ const links = [
   { to: '/admin/contact-messages', label: 'Contact Messages', icon: 'mail' },
 ];
 
-export default function AdminLayout() {
+export default function AdminLayout({ children }) {
   const navigate = useNavigate();
   const settingsQuery = useQuery({ queryKey: ['settings'], queryFn: getSettings });
   const settings = settingsQuery.data || {};
@@ -42,7 +44,7 @@ export default function AdminLayout() {
         <div className="admin-nav-label">Workspace</div>
         <nav className="admin-menu" aria-label="Admin navigation">
           {links.map((link) => (
-            <NavLink key={link.to} to={link.to} end={link.to === '/admin'} className={({ isActive }) => `admin-link ${isActive ? 'active' : ''}`}>
+            <NavLink key={link.to} to={link.to} className={({ isActive }) => `admin-link ${isActive ? 'active' : ''}`}>
               <span className="material-symbols-outlined admin-link-icon" aria-hidden="true">{link.icon}</span>
               <span>{link.label}</span>
             </NavLink>
@@ -60,7 +62,7 @@ export default function AdminLayout() {
         </div>
       </aside>
       <section className="admin-content">
-        <Outlet />
+        {children}
       </section>
     </div>
   );

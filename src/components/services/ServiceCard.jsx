@@ -1,7 +1,9 @@
+'use client';
+
 import React from 'react';
 import GlassCard from '../common/GlassCard.jsx';
 import Badge from '../common/Badge.jsx';
-import { Link } from 'react-router-dom';
+import { Link } from '@/lib/router-compat';
 
 export default function ServiceCard({ service }) {
   return (

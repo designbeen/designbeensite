@@ -1,15 +1,14 @@
+'use client';
+
 import React from 'react';
-import { Outlet } from 'react-router-dom';
 import Navbar from './Navbar.jsx';
 import Footer from './Footer.jsx';
 
-export default function PublicLayout() {
+export default function PublicLayout({ children }) {
   return (
     <div className="site-shell">
       <Navbar />
-      <main>
-        <Outlet />
-      </main>
+      <main>{children}</main>
       <Footer />
     </div>
   );

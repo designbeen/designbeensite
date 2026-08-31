@@ -1,5 +1,52 @@
 import client from './client.js';
 
+async function processFormData(formData) {
+  if (!(formData instanceof FormData)) return formData;
+  const payload = {};
+  const galleryImages = [];
+
+  for (const [key, value] of formData.entries()) {
+    if (typeof value === 'object' && value !== null && typeof value.arrayBuffer === 'function' && value.size > 0) {
+      const uploadData = new FormData();
+      uploadData.append('file', value);
+      const res = await client.post('/uploads', uploadData);
+      const fileUrl = res.data.url;
+
+      if (key === 'galleryImages') {
+        galleryImages.push(fileUrl);
+      } else if (key === 'coverImage') {
+        payload.cover_image_url = fileUrl;
+      } else if (key === 'image') {
+        payload.image_url = fileUrl;
+      } else if (key === 'avatar' || key === 'avatarFile') {
+        payload.avatar_url = fileUrl;
+      } else if (key === 'logoFile') {
+        payload.logo_url = fileUrl;
+      } else if (key === 'iconFile') {
+        payload.icon = fileUrl;
+      } else if (key === 'logo') {
+        payload.logo_url = fileUrl;
+      } else if (key === 'favicon') {
+        payload.favicon_url = fileUrl;
+      } else {
+        payload[key] = fileUrl;
+      }
+    } else if (typeof value === 'string') {
+      if (key === 'galleryImages') {
+        galleryImages.push(value);
+      } else {
+        payload[key] = value;
+      }
+    }
+  }
+
+  if (galleryImages.length > 0) {
+    payload.gallery_images = galleryImages;
+  }
+
+  return payload;
+}
+
 export const adminLogin = async (credentials) => {
   const { data } = await client.post('/admin/login', credentials);
   return data;
@@ -21,16 +68,14 @@ export const getAdminServices = async () => {
 };
 
 export const createAdminService = async (formData) => {
-  const { data } = await client.post('/admin/services', formData, {
-    headers: { 'Content-Type': 'multipart/form-data' },
-  });
+  const payload = await processFormData(formData);
+  const { data } = await client.post('/admin/services', payload);
   return data.data;
 };
 
 export const updateAdminService = async ({ id, formData }) => {
-  const { data } = await client.put(`/admin/services/${id}`, formData, {
-    headers: { 'Content-Type': 'multipart/form-data' },
-  });
+  const payload = await processFormData(formData);
+  const { data } = await client.put(`/admin/services/${id}`, payload);
   return data.data;
 };
 
@@ -45,16 +90,14 @@ export const getAdminProjects = async () => {
 };
 
 export const createAdminProject = async (formData) => {
-  const { data } = await client.post('/admin/projects', formData, {
-    headers: { 'Content-Type': 'multipart/form-data' },
-  });
+  const payload = await processFormData(formData);
+  const { data } = await client.post('/admin/projects', payload);
   return data.data;
 };
 
 export const updateAdminProject = async ({ id, formData }) => {
-  const { data } = await client.put(`/admin/projects/${id}`, formData, {
-    headers: { 'Content-Type': 'multipart/form-data' },
-  });
+  const payload = await processFormData(formData);
+  const { data } = await client.put(`/admin/projects/${id}`, payload);
   return data.data;
 };
 
@@ -69,16 +112,14 @@ export const getAdminTestimonials = async () => {
 };
 
 export const createAdminTestimonial = async (formData) => {
-  const { data } = await client.post('/admin/testimonials', formData, {
-    headers: { 'Content-Type': 'multipart/form-data' },
-  });
+  const payload = await processFormData(formData);
+  const { data } = await client.post('/admin/testimonials', payload);
   return data.data;
 };
 
 export const updateAdminTestimonial = async ({ id, formData }) => {
-  const { data } = await client.put(`/admin/testimonials/${id}`, formData, {
-    headers: { 'Content-Type': 'multipart/form-data' },
-  });
+  const payload = await processFormData(formData);
+  const { data } = await client.put(`/admin/testimonials/${id}`, payload);
   return data.data;
 };
 
@@ -93,16 +134,14 @@ export const getAdminTechnologies = async () => {
 };
 
 export const createAdminTechnology = async (formData) => {
-  const { data } = await client.post('/admin/technologies', formData, {
-    headers: { 'Content-Type': 'multipart/form-data' },
-  });
+  const payload = await processFormData(formData);
+  const { data } = await client.post('/admin/technologies', payload);
   return data.data;
 };
 
 export const updateAdminTechnology = async ({ id, formData }) => {
-  const { data } = await client.put(`/admin/technologies/${id}`, formData, {
-    headers: { 'Content-Type': 'multipart/form-data' },
-  });
+  const payload = await processFormData(formData);
+  const { data } = await client.put(`/admin/technologies/${id}`, payload);
   return data.data;
 };
 
@@ -137,9 +176,8 @@ export const getAdminSettings = async () => {
 };
 
 export const updateAdminSettings = async (formData) => {
-  const { data } = await client.put('/admin/settings', formData, {
-    headers: { 'Content-Type': 'multipart/form-data' },
-  });
+  const payload = await processFormData(formData);
+  const { data } = await client.put('/admin/settings', payload);
   return data.data;
 };
 
@@ -174,16 +212,14 @@ export const getAdminPartners = async () => {
 };
 
 export const createAdminPartner = async (formData) => {
-  const { data } = await client.post('/admin/partners', formData, {
-    headers: { 'Content-Type': 'multipart/form-data' },
-  });
+  const payload = await processFormData(formData);
+  const { data } = await client.post('/admin/partners', payload);
   return data.data;
 };
 
 export const updateAdminPartner = async ({ id, formData }) => {
-  const { data } = await client.put(`/admin/partners/${id}`, formData, {
-    headers: { 'Content-Type': 'multipart/form-data' },
-  });
+  const payload = await processFormData(formData);
+  const { data } = await client.put(`/admin/partners/${id}`, payload);
   return data.data;
 };
 
@@ -203,16 +239,14 @@ export const getAdminTeam = async () => {
 };
 
 export const createAdminTeamMember = async (formData) => {
-  const { data } = await client.post('/admin/team', formData, {
-    headers: { 'Content-Type': 'multipart/form-data' },
-  });
+  const payload = await processFormData(formData);
+  const { data } = await client.post('/admin/team', payload);
   return data.data;
 };
 
 export const updateAdminTeamMember = async ({ id, formData }) => {
-  const { data } = await client.put(`/admin/team/${id}`, formData, {
-    headers: { 'Content-Type': 'multipart/form-data' },
-  });
+  const payload = await processFormData(formData);
+  const { data } = await client.put(`/admin/team/${id}`, payload);
   return data.data;
 };
 

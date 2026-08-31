@@ -1,5 +1,7 @@
+'use client';
+
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from '@/lib/router-compat';
 import { motion } from 'framer-motion';
 import GlassCard from '../common/GlassCard.jsx';
 import Button from '../common/Button.jsx';

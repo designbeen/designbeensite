@@ -1,6 +1,8 @@
+'use client';
+
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Link } from 'react-router-dom';
+import { Link } from '@/lib/router-compat';
 import { motion } from 'framer-motion';
 import { getSettings, getNavigation } from '../../api/settingsApi.js';
 import Loading from '../common/Loading.jsx';

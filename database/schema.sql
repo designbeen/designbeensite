@@ -276,3 +276,14 @@ CREATE TABLE IF NOT EXISTS team_departments (
   UNIQUE KEY uniq_team_departments_slug (slug),
   KEY idx_team_departments_active (active, sort_order)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS uploads (
+  id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  filename VARCHAR(255) NOT NULL,
+  mime_type VARCHAR(100) NOT NULL,
+  data LONGBLOB NOT NULL,
+  size_bytes INT UNSIGNED NOT NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
