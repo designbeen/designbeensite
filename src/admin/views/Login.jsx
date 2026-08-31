@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from '@/lib/router-compat';
 import { adminLogin } from '../../api/adminApi.js';
 import SectionHeader from '../../components/common/SectionHeader.jsx';
@@ -11,9 +11,14 @@ import AdminField from '../../components/admin/AdminField.jsx';
 export default function Login() {
   const [form, setForm] = useState({ email: 'admin@designbeen.com', password: '' });
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
+
   const mutation = useMutation({
     mutationFn: adminLogin,
-    onSuccess: () => navigate('/admin'),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['admin-session'] });
+      navigate('/admin');
+    },
   });
 
   return (
